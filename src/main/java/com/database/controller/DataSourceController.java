@@ -1,8 +1,10 @@
 package com.database.controller;
 
+import com.database.config.PrimaryDataSourceConfig;
 import com.database.mapper.primary.PrimaryMapper;
 import com.database.mapper.secondary.SecondaryMapper;
 import com.database.service.DataSourceService;
+import com.database.util.DataSourceUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,7 +39,7 @@ public class DataSourceController {
     }
 
     @PostMapping("/tran")
-    public String transaction() throws Exception {
+    public String transaction() {
         try {
             dataSourceService.transaction();
         } catch (Exception e) {
@@ -49,6 +51,22 @@ public class DataSourceController {
         } catch (Exception e) {
             log.warn(e.getMessage());
         }
+
+        return "success";
+    }
+
+    @GetMapping("/dynamic/query")
+    public String dynamicQuery() throws Exception {
+        String msg = primaryMapper.query(1);
+        log.info(msg);
+        DataSourceUtil.setDataSource("secondary");
+        msg = primaryMapper.query(1);
+        log.info(msg);
+
+        msg = dataSourceService.query(1);
+        log.info(msg);
+        msg = dataSourceService.query2(1);
+        log.info(msg);
 
         return "success";
     }

@@ -1,5 +1,6 @@
 package com.database.service;
 
+import com.database.annotation.DataSource;
 import com.database.mapper.primary.PrimaryMapper;
 import com.database.mapper.secondary.SecondaryMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -32,5 +33,15 @@ public class DataSourceService {
         secondaryMapper.insertItem("tran2");
         log.info("inserted in transaction2");
         throw new Exception("transaction2 exception");
+    }
+
+    @DataSource("primary")
+    public String query(int id) {
+        return primaryMapper.query(id);
+    }
+
+    @DataSource("secondary")
+    public String query2(int id) {
+        return primaryMapper.query(id);
     }
 }
